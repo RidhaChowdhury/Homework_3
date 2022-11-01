@@ -14,7 +14,8 @@
 // any resources or individuals you consulted on the creation
 // of this program.
 
-// 1. Used github copilot to write unit tests
+// 1. Used github copilot to write unit tests and the
+//    main function with looping menu of commands.
 //---------------------------------------------------------------------
 
 #include <iostream>
@@ -24,6 +25,10 @@
 using namespace std;
 
 #pragma region vector-class
+
+string error = "Error: ";
+string indexOutOfBounds = "Index out of bounds";
+
 class BasicVector
 {
 private:
@@ -45,6 +50,7 @@ public:
 	void push_back(int);
 	void insert(int, int);
 	void pop_back();
+    void remove(int);
 
 	int getSize() const;
 	int getCapacity() const;
@@ -132,6 +138,16 @@ void BasicVector::pop_back() {
             return;
         data[this->size - 1] = 0;
         size--;
+}
+
+void BasicVector::remove(int index) {
+    if(index < 0 || index >= size) {
+        cerr << error + indexOutOfBounds << endl;
+        exit(1);
+    }
+    for (int shiftIndex = index; shiftIndex < this->size; shiftIndex++) {
+        data[shiftIndex] = data[shiftIndex + 1];
+    }
 }
 
 int BasicVector::getSize() const {
@@ -256,24 +272,76 @@ void popBackTest() {
     unitTest(vector.back(), 4, "vector.back()");
 }
 
+void removeElementAtIndexTest() {
+    BasicVector vector(3);
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(3);
+
+    vector.print();
+
+    vector.remove(1);
+
+    vector.print();
+
+    unitTest(vector[0], 1, "vector[0]");
+
+}
+
 #pragma endregion
+
+enum commands {
+    at = 1,
+    push_back = 2,
+    insert = 3,
+    pop_back = 4,
+    remove_at_index = 5,
+    print = 6,
+    quit = 7,
+
+    //settings
+    auto_print = 8,
+};
 
 int main()
 {
-/*	int capacity;
+	int capacity;
 	cout << "Enter starting capacity of vector: ";
 	cin >> capacity;
-*/
 
-    //constructingVectorsTest();
-    //pushingAndAccessingElementsTest();
-    //insertingElementsTest();
+    BasicVector vector(capacity);
+
+    bool autoPrint = false;
 
     // Implement command prompt loop
-	//while(true)
-	//{
-		
-	//}
+	bool isRunning = true;
+    while(isRunning)
+	{
+		int command;
+
+        switch(command) {
+            case at:
+                // implement at command
+                int index;
+                cin >> index;
+                cout << "Element at index " << index << ": " << vector.at(index);
+                break;
+
+            case push_back:
+
+            case quit:
+                isRunning = false;
+                break;
+
+
+            case auto_print:
+                // implement auto print command
+                autoPrint = true;
+                break;
+        }
+	}
+
+    if()
 
 	return 0;
 }
