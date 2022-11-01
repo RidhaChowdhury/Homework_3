@@ -164,6 +164,7 @@ void BasicVector::print() const {
         cout << data[index];
         if(index < this->size - 1) cout << ", ";
     }
+    cout << endl;
 }
 #pragma endregion
 
@@ -297,11 +298,27 @@ enum commands {
     pop_back = 4,
     remove_at_index = 5,
     print = 6,
-    quit = 7,
+    get_size = 7,
+    get_capacity = 8,
+    help = 9,
+    quit = 10,
 
     //settings
-    auto_print = 8,
+    auto_print = 11
 };
+
+void helpText() {
+    cout << "1. at (index) returns value" << endl;
+    cout << "2. push_back (value)" << endl;
+    cout << "3. insert (index, value)" << endl;
+    cout << "4. pop_back" << endl;
+    cout << "5. remove_at_index (index)" << endl;
+    cout << "6. print" << endl;
+    cout << "7. get_size" << endl;
+    cout << "8. get_capacity" << endl;
+    cout << "9. quit" << endl;
+    cout << "10. toggle auto_print" << endl;
+}
 
 int main()
 {
@@ -317,17 +334,59 @@ int main()
 	bool isRunning = true;
     while(isRunning)
 	{
-		int command;
-
+		int command, index, value;
+        helpText();
+        cout << "Commands: " << endl;
+        cout << "Enter command(6. for help): ";
+        cin >> command;
         switch(command) {
             case at:
                 // implement at command
-                int index;
                 cin >> index;
                 cout << "Element at index " << index << ": " << vector.at(index);
                 break;
 
             case push_back:
+                // implement push_back command
+                cin >> value;
+                vector.push_back(value);
+                break;
+
+            case insert:
+                // implement insert command
+                cin >> index >> value;
+                vector.insert(index, value);
+                break;
+
+            case pop_back:
+                // implement pop_back command
+                vector.pop_back();
+                break;
+
+            case remove_at_index:
+                // implement remove_at_index command
+                cin >> index;
+                vector.remove(index);
+                break;
+
+            case print:
+                // implement print command
+                vector.print();
+                break;
+
+            case get_size:
+                // implement get_size command
+                cout << "Size: " << vector.getSize();
+                break;
+
+            case get_capacity:
+                // implement get_capacity command
+                cout << "Capacity: " << vector.getCapacity();
+                break;
+
+            case help:
+                helpText();
+                break;
 
             case quit:
                 isRunning = false;
@@ -336,12 +395,19 @@ int main()
 
             case auto_print:
                 // implement auto print command
-                autoPrint = true;
+                autoPrint = !autoPrint;
+                break;
+
+            default:
+                cout << "Invalid command" << endl;
                 break;
         }
-	}
+        if(command != print && autoPrint)
+            vector.print();
 
-    if()
+        cout << endl;
+    }
 
-	return 0;
+    return 0;
+
 }
