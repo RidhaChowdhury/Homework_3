@@ -76,7 +76,10 @@ BasicVector::BasicVector(int capacity)
 
 BasicVector::~BasicVector()
 {
-
+    for(int index = 0; index < this->size; index++) {
+        data[index] = 0;
+    }
+    delete []data;
 }
 
 int& BasicVector::at(int index)
@@ -108,8 +111,20 @@ void BasicVector::push_back(int value) {
     size++;
 }
 
-void BasicVector::insert(int, int) {
+void BasicVector::insert(int index, int value) {
+    if(index < 0 || index >= this->size) {
+        cerr << "Error: Index out of bound " << index << endl;
+        exit(1);
+    }
 
+    if(this->size == this->capacity)
+        resize();
+
+    for (int i = this->size; i > index; i--) {
+        data[i] = data[i - 1];
+    }
+    data[index] = value;
+    size++;
 }
 
 void BasicVector::pop_back() {
@@ -125,6 +140,7 @@ int BasicVector::getCapacity() const {
 }
 
 void BasicVector::print() const {
+    cout << "elements(" << this->size << "/" << this->capacity << "): ";
     for(int index = 0; index < this->size; index++) {
         cout << data[index];
         if(index < this->size - 1) cout << ", ";
@@ -135,17 +151,19 @@ void BasicVector::print() const {
 #pragma region unit-tests
 
 template <typename T>
-void unitTest(T returned, T expected, string testName)
+bool unitTest(T returned, T expected, const string& testName)
 {
     if (returned == expected) {
         cout << "\u2705";
         cout << "\033[1;32m";
         cout << "PASSED: " << testName << endl;
+        return true;
     }
     else {
         cout << "\u274C";
         cout << "\033[31m";
         cout << "FAILED: " << testName << " (returned " << returned << ", expected " << expected << ")" << endl;
+        return true;
     }
     cout << "\033[0m";
 
@@ -197,6 +215,32 @@ void pushingAndAccessingElementsTest() {
         unitTest(vector2[i], i, "vector2[" + to_string(i) + "]");
 }
 
+void insertingElementsTest() {
+    BasicVector vector(10);
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(3);
+    vector.push_back(4);
+    vector.push_back(5);
+
+    vector.insert(0, 10);
+    unitTest(vector[0], 10, "vector[0]");
+    unitTest(vector[1], 1, "vector[1]");
+    unitTest(vector[2], 2, "vector[2]");
+    unitTest(vector[3], 3, "vector[3]");
+    unitTest(vector[4], 4, "vector[4]");
+    unitTest(vector[5], 5, "vector[5]");
+
+    vector.insert(2, 20);
+    unitTest(vector[0], 10, "vector[0]");
+    unitTest(vector[1], 1, "vector[1]");
+    unitTest(vector[2], 20, "vector[2]");
+    unitTest(vector[3], 2, "vector[3]");
+    unitTest(vector[4], 3, "vector[4]");
+    unitTest(vector[5], 4, "vector[5]");
+    unitTest(vector[6], 5, "vector[6]");
+}
+
 #pragma endregion
 
 int main()
@@ -207,8 +251,8 @@ int main()
 */
 
     //constructingVectorsTest();
-    pushingAndAccessingElementsTest();
-
+    //pushingAndAccessingElementsTest();
+    //insertingElementsTest();
 
     // Implement command prompt loop
 	//while(true)
