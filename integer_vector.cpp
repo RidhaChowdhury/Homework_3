@@ -128,7 +128,10 @@ void BasicVector::insert(int index, int value) {
 }
 
 void BasicVector::pop_back() {
-
+    if(this->size == 0)
+            return;
+        data[this->size - 1] = 0;
+        size--;
 }
 
 int BasicVector::getSize() const {
@@ -239,6 +242,18 @@ void insertingElementsTest() {
     unitTest(vector[4], 3, "vector[4]");
     unitTest(vector[5], 4, "vector[5]");
     unitTest(vector[6], 5, "vector[6]");
+}
+
+void popBackTest() {
+    BasicVector vector(10);
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(3);
+    vector.push_back(4);
+    vector.push_back(5);
+
+    vector.pop_back();
+    unitTest(vector.back(), 4, "vector.back()");
 }
 
 #pragma endregion
