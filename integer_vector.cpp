@@ -262,41 +262,43 @@ void popBackTest() {
     vector.pop_back();
     unitTest(vector.back(), 4, "vector.back()");
 }
-\
+
 
 #pragma endregion
 
 enum commands {
-    at = 1,
-    push_back = 2,
-    insert = 3,
-    pop_back = 4,
-    print = 5,
-    get_size = 6,
-    get_capacity = 7,
-    unit_tests = 8,
-    help = 9,
-    quit = 10,
+    at,
+    get,
+    front,
+    back,
+    insert,
+    push,
+    pop,
+    get_size,
+    get_capacity,
+    print,
+    help,
+    quit,
 
     //settings
-    auto_print = 11
+    auto_print
 };
 
 void helpText() {
     cout << "Commands: " << endl;
-    cout << "1. at (index) returns value" << endl;
-    cout << "2. push_back (value)" << endl;
-    cout << "3. insert (index, value)" << endl;
-    cout << "4. pop_back" << endl;
-    cout << "5. print" << endl;
-    cout << "6. get_size" << endl;
-    cout << "7. get_capacity" << endl;
-    cout << "8. Run my development unit tests" << endl;
-    cout << "9. help" << endl;
-    cout << "10. quit" << endl;
-    cout << "11. toggle auto_print" << endl;
-
-
+    cout << at <<           ": at       <index>         - Invoke the at function, passing the index as its parameter, print result" << endl;
+    cout << get <<          ": get      <index>         - Invoke the operator[] function, passing index its parameter, print result" << endl;
+    cout << front <<        ": front                    - Invoke the front function, print the result" << endl;
+    cout << back <<         ": back                     - Invoke the back function, print the result" << endl;
+    cout << insert <<       ": insert   <index> <value> - Invoke the insert function, passing index and value as its two parameters" << endl;
+    cout << push <<         ": push     <value>         - Invoke the push_back function, passing value its parameter" << endl;
+    cout << pop <<          ": pop                      - Invoke the pop_back function." << endl;
+    cout << get_size <<     ": size                     - Invoke the size function, print the returned value" << endl;
+    cout << get_capacity << ": capacity                 - Invoke the capacity function, print the returned value" << endl;
+    cout << print <<        ": print                    - Invoke the print command" << endl;
+    cout << help <<         ": help                    - prints the list of commands and the inputs." << endl;
+    cout << quit <<         ": quit                    - Break out of loop, exit program normally." << endl;
+    cout << auto_print <<   ": auto_print              - Toggle auto print on/off" << endl;
 }
 
 int main()
@@ -330,7 +332,7 @@ int main()
                 cout << "Element at index " << index << ": " << vector.at(index);
                 break;
 
-            case push_back:
+            case push:
                 // implement push_back command
                 cin >> value;
                 vector.push_back(value);
@@ -342,7 +344,7 @@ int main()
                 vector.insert(index, value);
                 break;
 
-            case pop_back:
+            case pop:
                 // implement pop_back command
                 vector.pop_back();
                 break;
@@ -361,19 +363,6 @@ int main()
                 // implement get_capacity command
                 cout << "Capacity: " << vector.getCapacity();
                 break;
-
-            case unit_tests:
-                cout << "Running constructing vectors test" << endl;
-                constructingVectorsTest();
-                cout << "Running pushing and accessing elements test" << endl;
-                pushingAndAccessingElementsTest();
-                // run the rest of the tests with a cout before
-                cout << "Running inserting elements test" << endl;
-                insertingElementsTest();
-                cout << "Running the pop back test" << endl;
-                popBackTest();
-                break;
-
 
             case help:
                 helpText();

@@ -49,124 +49,41 @@ bool unitTest(T returned, T expected, const string& testName)
     }
 }
 
-void constructingVectorsTest() {
-    TemplateVector<int> vector1(20);
-    unitTest(vector1.getCapacity(), 32, "vector1.getCapacity()");
-    unitTest(vector1.getSize(), 0, "vector1.getSize()");
-
-    TemplateVector<int> vector2(100);
-    unitTest(vector2.getCapacity(), 128, "vector2.getCapacity()");
-    unitTest(vector2.getSize(), 0, "vector2.getSize()");
-
-    TemplateVector<int> vector3(10);
-    unitTest(vector3.getCapacity(), 16, "vector3.getCapacity()");
-    unitTest(vector3.getSize(), 0, "vector3.getSize()");
-}
-
-void pushingAndAccessingElementsTest() {
-    TemplateVector<int> vector(10);
-    vector.push_back(1);
-    vector.push_back(2);
-    vector.push_back(3);
-    vector.push_back(4);
-    vector.push_back(5);
-
-    unitTest(vector[0], 1, "vector[0]");
-    unitTest(vector[1], 2, "vector[1]");
-    unitTest(vector[2], 3, "vector[2]");
-    unitTest(vector[3], 4, "vector[3]");
-    unitTest(vector[4], 5, "vector[4]");
-
-    unitTest(vector.at(0), 1, "vector.at(0)");
-    unitTest(vector.at(1), 2, "vector.at(1)");
-    unitTest(vector.at(2), 3, "vector.at(2)");
-    unitTest(vector.at(3), 4, "vector.at(3)");
-    unitTest(vector.at(4), 5, "vector.at(4)");
-
-    unitTest(vector.front(), 1, "vector.front()");
-    unitTest(vector.back(), 5, "vector.back()");
-
-    // write a unit test that forces the vector to resize
-    TemplateVector<int> vector2(1);
-    for(int i = 0; i < 20; i++)
-        vector2.push_back(i);
-    unitTest(vector2.getSize(), 20, "vector2.getSize()");
-    for(int i = 0; i < 20; i++)
-        unitTest(vector2[i], i, "vector2[" + to_string(i) + "]");
-}
-
-void insertingElementsTest() {
-    TemplateVector<int> vector(10);
-    vector.push_back(1);
-    vector.push_back(2);
-    vector.push_back(3);
-    vector.push_back(4);
-    vector.push_back(5);
-
-    vector.insert(0, 10);
-    unitTest(vector[0], 10, "vector[0]");
-    unitTest(vector[1], 1, "vector[1]");
-    unitTest(vector[2], 2, "vector[2]");
-    unitTest(vector[3], 3, "vector[3]");
-    string indexOutOfBounds = "Index out of bounds";
-    string error = "Error: ";
-    unitTest(vector[4], 4, "vector[4]");
-    unitTest(vector[5], 5, "vector[5]");
-
-    vector.insert(2, 20);
-    unitTest(vector[0], 10, "vector[0]");
-    unitTest(vector[1], 1, "vector[1]");
-    unitTest(vector[2], 20, "vector[2]");
-    unitTest(vector[3], 2, "vector[3]");
-    unitTest(vector[4], 3, "vector[4]");
-    unitTest(vector[5], 4, "vector[5]");
-    unitTest(vector[6], 5, "vector[6]");
-}
-
-void popBackTest() {
-    TemplateVector<int> vector(10);
-    vector.push_back(1);
-    vector.push_back(2);
-    vector.push_back(3);
-    vector.push_back(4);
-    vector.push_back(5);
-
-    vector.pop_back();
-    unitTest(vector.back(), 4, "vector.back()");
-}
-
-
 #pragma endregion
 
 enum commands {
-    at = 1,
-    push_back = 2,
-    insert = 3,
-    pop_back = 4,
-    print = 5,
-    get_size = 6,
-    get_capacity = 7,
-    unit_tests = 8,
-    help = 9,
-    quit = 10,
+    at,
+    get,
+    front,
+    back,
+    insert,
+    push,
+    pop,
+    get_size,
+    get_capacity,
+    print,
+    help,
+    quit,
 
     //settings
-    auto_print = 11
+    auto_print
 };
 
 void helpText() {
     cout << "Commands: " << endl;
-    cout << "1. at (index) returns value" << endl;
-    cout << "2. push_back (value)" << endl;
-    cout << "3. insert (index, value)" << endl;
-    cout << "4. pop_back" << endl;
-    cout << "5. print" << endl;
-    cout << "6. get_size" << endl;
-    cout << "7. get_capacity" << endl;
-    cout << "8. Run my development unit tests" << endl;
-    cout << "9. help" << endl;
-    cout << "10. quit" << endl;
-    cout << "11. toggle auto_print" << endl;
+    cout << at <<           ": at       <index>         - Invoke the at function, passing the index as its parameter, print result" << endl;
+    cout << get <<          ": get      <index>         - Invoke the operator[] function, passing index its parameter, print result" << endl;
+    cout << front <<        ": front                    - Invoke the front function, print the result" << endl;
+    cout << back <<         ": back                     - Invoke the back function, print the result" << endl;
+    cout << insert <<       ": insert   <index> <value> - Invoke the insert function, passing index and value as its two parameters" << endl;
+    cout << push <<         ": push     <value>         - Invoke the push_back function, passing value its parameter" << endl;
+    cout << pop <<          ": pop                      - Invoke the pop_back function." << endl;
+    cout << get_size <<     ": size                     - Invoke the size function, print the returned value" << endl;
+    cout << get_capacity << ": capacity                 - Invoke the capacity function, print the returned value" << endl;
+    cout << print <<        ": print                    - Invoke the print command" << endl;
+    cout << help <<         ": help                    - prints the list of commands and the inputs." << endl;
+    cout << quit <<         ": quit                    - Break out of loop, exit program normally." << endl;
+    cout << auto_print <<   ": auto_print              - Toggle auto print on/off" << endl;
 }
 
 /*
@@ -203,22 +120,15 @@ template <typename T>
     cin >> dataType;
 }
 */
-int main()
-{
-    int capacity;
-    cout << "Enter starting capacity of vector: ";
-    cin >> capacity;
 
-    // Declare a TemplateVector with an int type argument
-    TemplateVector<int> vector(capacity);
-
-    cout << "Initialized vector with capacity " << vector.getCapacity() << endl << endl;
-
-    bool autoPrint = false;
-
+template <typename T>
+T& menu(TemplateVector<T> templateVector) {
     // Implement command prompt loop
     bool isRunning = true;
+    bool autoPrint = false;
+
     helpText();
+
     while(isRunning)
     {
         int command, index, value;
@@ -232,53 +142,40 @@ int main()
             case at:
                 // implement at command
                 cin >> index;
-                cout << "Element at index " << index << ": " << vector.at(index);
+                cout << "Element at index " << index << ": " << templateVector.at(index);
                 break;
 
-            case push_back:
+            case push:
                 // implement push_back command
                 cin >> value;
-                vector.push_back(value);
+                templateVector.push_back(value);
                 break;
 
             case insert:
                 // implement insert command
                 cin >> index >> value;
-                vector.insert(index, value);
+                templateVector.insert(index, value);
                 break;
 
-            case pop_back:
+            case pop:
                 // implement pop_back command
-                vector.pop_back();
+                templateVector.pop_back();
                 break;
 
             case print:
                 // implement print command
-                vector.print();
+                templateVector.print();
                 break;
 
             case get_size:
                 // implement get_size command
-                cout << "Size: " << vector.getSize();
+                cout << "Size: " << templateVector.getSize();
                 break;
 
             case get_capacity:
                 // implement get_capacity command
-                cout << "Capacity: " << vector.getCapacity();
+                cout << "Capacity: " << templateVector.getCapacity();
                 break;
-
-            case unit_tests:
-                cout << "Running constructing vectors test" << endl;
-                constructingVectorsTest();
-                cout << "Running pushing and accessing elements test" << endl;
-                pushingAndAccessingElementsTest();
-                // run the rest of the tests with a cout before
-                cout << "Running inserting elements test" << endl;
-                insertingElementsTest();
-                cout << "Running the pop back test" << endl;
-                popBackTest();
-                break;
-
 
             case help:
                 helpText();
@@ -299,10 +196,24 @@ int main()
                 break;
         }
         if(command != print && autoPrint)
-            vector.print();
+            templateVector.print();
 
         cout << endl;
     }
+}
+
+int main()
+{
+    int capacity;
+    cout << "Enter starting capacity of vector: ";
+    cin >> capacity;
+
+    // Declare a TemplateVector with an int type argument
+    TemplateVector<int> vector(capacity);
+
+    cout << "Initialized vector with capacity " << vector.getCapacity() << endl << endl;
+
+
 
     return 0;
 
