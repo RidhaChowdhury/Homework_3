@@ -7,7 +7,7 @@
 //
 // Description: This program implements a basic integer vector
 // and provides the user with an interactive prompting system
-// to issue commands over an instance of our BasicVector class.
+// to issue commands over an instance of our TemplateVector class.
 //
 // Acknowledgements:
 // 1. Please use this portion of the banner comment to list
@@ -21,145 +21,13 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include "TemplateVector.h"
 
 using namespace std;
 
 #pragma region vector-class
 
-string error = "Error: ";
-string indexOutOfBounds = "Index out of bounds";
 
-class BasicVector
-{
-private:
-    int size = 0;
-    int capacity;
-    int* data;
-
-    void resize();
-
-public:
-    explicit BasicVector(int);
-    ~BasicVector();
-
-    int& at(int);
-    int& operator[](int);
-    int& front() const;
-    int& back() const;
-
-    void push_back(int);
-    void insert(int, int);
-    void pop_back();
-
-    [[noreturn]] void remove(int);
-
-    int getSize() const;
-    int getCapacity() const;
-
-    void print() const;
-};
-
-void BasicVector::resize()
-{
-    int* newData = new int[this->capacity * 2];
-    for(int index = 0; index < this->size; index++) {
-        newData[index] = this->data[index];
-    }
-    delete []data;
-    data = newData;
-    capacity *= 2;
-}
-
-BasicVector::BasicVector(int capacity)
-{
-    if(capacity < 16)
-        capacity = 16;
-    else
-        capacity = (int)pow(2, (int)log2(capacity) + 1);
-    this->capacity = capacity;
-
-    data = new int[this->capacity];
-}
-
-BasicVector::~BasicVector()
-{
-    for(int index = 0; index < this->size; index++) {
-        data[index] = 0;
-    }
-    delete []data;
-}
-
-int& BasicVector::at(int index)
-{
-    if(index < 0 || index >= size) {
-        cerr << "Error: Index out of bounds" << endl;
-        exit(1);
-    }
-    return data[index];
-}
-
-int& BasicVector::operator[](int index)
-{
-    return at(index);
-}
-
-int &BasicVector::front() const {
-    return data[0];
-}
-
-int &BasicVector::back() const {
-    return data[size - 1];
-}
-
-void BasicVector::push_back(int value) {
-    if(size == capacity)
-        resize();
-    data[size] = value;
-    size++;
-}
-
-void BasicVector::insert(int index, int value) {
-    if(index < 0 || index >= this->size) {
-        cerr << "Error: Index out of bound " << index << endl;
-        exit(1);
-    }
-
-    if(this->size == this->capacity)
-        resize();
-
-    for (int i = this->size; i > index; i--) {
-        data[i] = data[i - 1];
-    }
-    data[index] = value;
-    size++;
-}
-
-void BasicVector::pop_back() {
-    if(this->size == 0)
-        return;
-    data[this->size - 1] = 0;
-    size--;
-}
-
-int BasicVector::getSize() const {
-    return this->size;
-}
-
-int BasicVector::getCapacity() const {
-    return this->capacity;
-}
-
-void BasicVector::print() const {
-    cout << "elements(" << this->size << "/" << this->capacity << "): ";
-    // Set console to bold
-    cout << "\033[1m";
-    for(int index = 0; index < this->size; index++) {
-        cout << data[index];
-        if(index < this->size - 1) cout << ", ";
-    }
-    cout << "\033[0m" << endl;
-    cout << endl;
-}
 #pragma endregion
 
 #pragma region unit-tests
@@ -182,21 +50,21 @@ bool unitTest(T returned, T expected, const string& testName)
 }
 
 void constructingVectorsTest() {
-    BasicVector vector1(20);
+    TemplateVector<int> vector1(20);
     unitTest(vector1.getCapacity(), 32, "vector1.getCapacity()");
     unitTest(vector1.getSize(), 0, "vector1.getSize()");
 
-    BasicVector vector2(100);
+    TemplateVector<int> vector2(100);
     unitTest(vector2.getCapacity(), 128, "vector2.getCapacity()");
     unitTest(vector2.getSize(), 0, "vector2.getSize()");
 
-    BasicVector vector3(10);
+    TemplateVector<int> vector3(10);
     unitTest(vector3.getCapacity(), 16, "vector3.getCapacity()");
     unitTest(vector3.getSize(), 0, "vector3.getSize()");
 }
 
 void pushingAndAccessingElementsTest() {
-    BasicVector vector(10);
+    TemplateVector<int> vector(10);
     vector.push_back(1);
     vector.push_back(2);
     vector.push_back(3);
@@ -219,7 +87,7 @@ void pushingAndAccessingElementsTest() {
     unitTest(vector.back(), 5, "vector.back()");
 
     // write a unit test that forces the vector to resize
-    BasicVector vector2(1);
+    TemplateVector<int> vector2(1);
     for(int i = 0; i < 20; i++)
         vector2.push_back(i);
     unitTest(vector2.getSize(), 20, "vector2.getSize()");
@@ -228,7 +96,7 @@ void pushingAndAccessingElementsTest() {
 }
 
 void insertingElementsTest() {
-    BasicVector vector(10);
+    TemplateVector<int> vector(10);
     vector.push_back(1);
     vector.push_back(2);
     vector.push_back(3);
@@ -240,6 +108,8 @@ void insertingElementsTest() {
     unitTest(vector[1], 1, "vector[1]");
     unitTest(vector[2], 2, "vector[2]");
     unitTest(vector[3], 3, "vector[3]");
+    string indexOutOfBounds = "Index out of bounds";
+    string error = "Error: ";
     unitTest(vector[4], 4, "vector[4]");
     unitTest(vector[5], 5, "vector[5]");
 
@@ -254,7 +124,7 @@ void insertingElementsTest() {
 }
 
 void popBackTest() {
-    BasicVector vector(10);
+    TemplateVector<int> vector(10);
     vector.push_back(1);
     vector.push_back(2);
     vector.push_back(3);
@@ -264,7 +134,7 @@ void popBackTest() {
     vector.pop_back();
     unitTest(vector.back(), 4, "vector.back()");
 }
-\
+
 
 #pragma endregion
 
@@ -297,17 +167,50 @@ void helpText() {
     cout << "9. help" << endl;
     cout << "10. quit" << endl;
     cout << "11. toggle auto_print" << endl;
-
-
 }
 
+/*
+template <typename T>
+*TemplateVector<T> createVector() {
+    int capacity;
+    cout << "Enter capacity: ";
+    cin >> capacity;
+    /*
+     * Before asking for the starting capacity, prompt the user to specify what data type they
+        want the vector to store in data
+        o 1 for int
+        o 2 for float
+        o 3 for double
+        o 4 for string
+        o 5 for bool
+
+        Expected prompt/input with sample output
+
+        Specify what data type to store in vector:
+        1) int
+        2) float
+        3) double
+        4) string
+        5) bool
+
+    int dataType;
+    cout << "Specify what data type to store in vector: " << endl;
+    cout << "1) int" << endl;
+    cout << "2) float" << endl;
+    cout << "3) double" << endl;
+    cout << "4) string" << endl;
+    cout << "5) bool" << endl;
+    cin >> dataType;
+}
+*/
 int main()
 {
     int capacity;
     cout << "Enter starting capacity of vector: ";
     cin >> capacity;
 
-    BasicVector vector(capacity);
+    // Declare a TemplateVector with an int type argument
+    TemplateVector<int> vector(capacity);
 
     cout << "Initialized vector with capacity " << vector.getCapacity() << endl << endl;
 

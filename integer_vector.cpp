@@ -51,8 +51,6 @@ public:
 	void insert(int, int);
 	void pop_back();
 
-    [[noreturn]] void remove(int);
-
 	int getSize() const;
 	int getCapacity() const;
 
