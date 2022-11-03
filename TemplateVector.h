@@ -62,9 +62,6 @@ TemplateVector<T>::TemplateVector(int capacity) {
 
 template <typename T>
 TemplateVector<T>::~TemplateVector() {
-    for(int index = 0; index < this->size; index++) {
-        data[index] = 0;
-    }
     delete []data;
 }
 
@@ -120,8 +117,7 @@ template <typename T>
 void TemplateVector<T>::pop_back() {
     if(this->size == 0)
         return;
-    data[this->size - 1] = 0;
-    size--;
+    this->size--;
 }
 
 template <typename T>

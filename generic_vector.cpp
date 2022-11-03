@@ -22,6 +22,7 @@
 #include <string>
 #include <cmath>
 #include "TemplateVector.h"
+#include <string>
 
 using namespace std;
 
@@ -86,44 +87,11 @@ void helpText() {
     cout << auto_print <<   ": auto_print              - Toggle auto print on/off" << endl;
 }
 
-/*
 template <typename T>
-*TemplateVector<T> createVector() {
-    int capacity;
-    cout << "Enter capacity: ";
-    cin >> capacity;
-    /*
-     * Before asking for the starting capacity, prompt the user to specify what data type they
-        want the vector to store in data
-        o 1 for int
-        o 2 for float
-        o 3 for double
-        o 4 for string
-        o 5 for bool
-
-        Expected prompt/input with sample output
-
-        Specify what data type to store in vector:
-        1) int
-        2) float
-        3) double
-        4) string
-        5) bool
-
-    int dataType;
-    cout << "Specify what data type to store in vector: " << endl;
-    cout << "1) int" << endl;
-    cout << "2) float" << endl;
-    cout << "3) double" << endl;
-    cout << "4) string" << endl;
-    cout << "5) bool" << endl;
-    cin >> dataType;
-}
-*/
-
-template <typename T>
-T& menu(TemplateVector<T> templateVector) {
+void menu(TemplateVector<T> templateVector) {
     // Implement command prompt loop
+    cout << "Initialized vector with capacity " << templateVector.getCapacity() << endl << endl;
+
     bool isRunning = true;
     bool autoPrint = false;
 
@@ -131,7 +99,8 @@ T& menu(TemplateVector<T> templateVector) {
 
     while(isRunning)
     {
-        int command, index, value;
+        int command, index;
+        T value;
         cout << "(" << help << ". for help)";
         cout << "\033[1m";
         cout << "\033[4m";
@@ -173,7 +142,6 @@ T& menu(TemplateVector<T> templateVector) {
                 break;
 
             case get_capacity:
-                // implement get_capacity command
                 cout << "Capacity: " << templateVector.getCapacity();
                 break;
 
@@ -208,13 +176,35 @@ int main()
     cout << "Enter starting capacity of vector: ";
     cin >> capacity;
 
-    // Declare a TemplateVector with an int type argument
-    TemplateVector<int> vector(capacity);
 
-    cout << "Initialized vector with capacity " << vector.getCapacity() << endl << endl;
-
-
+    int type = 0;
+    cout << "Specify what data type to store in vector: " << endl;
+    cout << "1) int" << endl;
+    cout << "2) float" << endl;
+    cout << "3) double" << endl;
+    cout << "4) string" << endl;
+    cout << "5) bool" << endl;
+    cin >> type;
+    switch (type) {
+        case 1:
+            menu(TemplateVector<int>(capacity));
+            break;
+        case 2:
+            menu(TemplateVector<float>(capacity));
+            break;
+        case 3:
+            menu(TemplateVector<double>(capacity));
+            break;
+        case 4:
+            menu(TemplateVector<string>(capacity));
+            break;
+        case 5:
+            menu(TemplateVector<bool>(capacity));
+            break;
+        default:
+            cout << "Invalid type" << endl;
+            break;
+    }
 
     return 0;
-
 }
