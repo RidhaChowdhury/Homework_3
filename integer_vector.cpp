@@ -50,7 +50,8 @@ public:
 	void push_back(int);
 	void insert(int, int);
 	void pop_back();
-    void remove(int);
+
+    [[noreturn]] void remove(int);
 
 	int getSize() const;
 	int getCapacity() const;
@@ -140,16 +141,6 @@ void BasicVector::pop_back() {
         size--;
 }
 
-void BasicVector::remove(int index) {
-    if(index < 0 || index >= size) {
-        cerr << error + indexOutOfBounds << endl;
-        exit(1);
-    }
-    for (int shiftIndex = index; shiftIndex < this->size; shiftIndex++) {
-        data[shiftIndex] = data[shiftIndex + 1];
-    }
-}
-
 int BasicVector::getSize() const {
     return this->size;
 }
@@ -160,10 +151,13 @@ int BasicVector::getCapacity() const {
 
 void BasicVector::print() const {
     cout << "elements(" << this->size << "/" << this->capacity << "): ";
+    // Set console to bold
+    cout << "\033[1m";
     for(int index = 0; index < this->size; index++) {
         cout << data[index];
         if(index < this->size - 1) cout << ", ";
     }
+    cout << "\033[0m" << endl;
     cout << endl;
 }
 #pragma endregion
@@ -183,10 +177,8 @@ bool unitTest(T returned, T expected, const string& testName)
         cout << "\u274C";
         cout << "\033[31m";
         cout << "FAILED: " << testName << " (returned " << returned << ", expected " << expected << ")" << endl;
-        return true;
+        return false;
     }
-    cout << "\033[0m";
-
 }
 
 void constructingVectorsTest() {
@@ -272,22 +264,7 @@ void popBackTest() {
     vector.pop_back();
     unitTest(vector.back(), 4, "vector.back()");
 }
-
-void removeElementAtIndexTest() {
-    BasicVector vector(3);
-    vector.push_back(1);
-    vector.push_back(2);
-    vector.push_back(3);
-
-    vector.print();
-
-    vector.remove(1);
-
-    vector.print();
-
-    unitTest(vector[0], 1, "vector[0]");
-
-}
+\
 
 #pragma endregion
 
@@ -296,10 +273,10 @@ enum commands {
     push_back = 2,
     insert = 3,
     pop_back = 4,
-    remove_at_index = 5,
-    print = 6,
-    get_size = 7,
-    get_capacity = 8,
+    print = 5,
+    get_size = 6,
+    get_capacity = 7,
+    unit_tests = 8,
     help = 9,
     quit = 10,
 
@@ -308,16 +285,20 @@ enum commands {
 };
 
 void helpText() {
+    cout << "Commands: " << endl;
     cout << "1. at (index) returns value" << endl;
     cout << "2. push_back (value)" << endl;
     cout << "3. insert (index, value)" << endl;
     cout << "4. pop_back" << endl;
-    cout << "5. remove_at_index (index)" << endl;
-    cout << "6. print" << endl;
-    cout << "7. get_size" << endl;
-    cout << "8. get_capacity" << endl;
-    cout << "9. quit" << endl;
-    cout << "10. toggle auto_print" << endl;
+    cout << "5. print" << endl;
+    cout << "6. get_size" << endl;
+    cout << "7. get_capacity" << endl;
+    cout << "8. Run my development unit tests" << endl;
+    cout << "9. help" << endl;
+    cout << "10. quit" << endl;
+    cout << "11. toggle auto_print" << endl;
+
+
 }
 
 int main()
@@ -328,16 +309,21 @@ int main()
 
     BasicVector vector(capacity);
 
+    cout << "Initialized vector with capacity " << vector.getCapacity() << endl << endl;
+
     bool autoPrint = false;
 
     // Implement command prompt loop
-	bool isRunning = true;
+    bool isRunning = true;
+    helpText();
     while(isRunning)
 	{
-		int command, index, value;
-        helpText();
-        cout << "Commands: " << endl;
-        cout << "Enter command(6. for help): ";
+        int command, index, value;
+        cout << "(" << help << ". for help)";
+        cout << "\033[1m";
+        cout << "\033[4m";
+        cout << "Enter command #: ";
+        cout << "\033[0m";
         cin >> command;
         switch(command) {
             case at:
@@ -363,12 +349,6 @@ int main()
                 vector.pop_back();
                 break;
 
-            case remove_at_index:
-                // implement remove_at_index command
-                cin >> index;
-                vector.remove(index);
-                break;
-
             case print:
                 // implement print command
                 vector.print();
@@ -383,6 +363,19 @@ int main()
                 // implement get_capacity command
                 cout << "Capacity: " << vector.getCapacity();
                 break;
+
+            case unit_tests:
+                cout << "Running constructing vectors test" << endl;
+                constructingVectorsTest();
+                cout << "Running pushing and accessing elements test" << endl;
+                pushingAndAccessingElementsTest();
+                // run the rest of the tests with a cout before
+                cout << "Running inserting elements test" << endl;
+                insertingElementsTest();
+                cout << "Running the pop back test" << endl;
+                popBackTest();
+                break;
+
 
             case help:
                 helpText();
