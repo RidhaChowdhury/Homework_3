@@ -163,8 +163,10 @@ void menu(TemplateVector<T> templateVector) {
                 cout << "Invalid command" << endl;
                 break;
         }
-        if(command != print && autoPrint)
+        if(command != print && autoPrint) {
+            cout << endl;
             templateVector.print();
+        }
 
         cout << endl;
     }

@@ -382,9 +382,10 @@ int main()
                 cout << "Invalid command" << endl;
                 break;
         }
-        if(command != print && autoPrint)
+        if(command != print && autoPrint) {
+            cout << endl;
             vector.print();
-
+        }
         cout << endl;
     }
 
